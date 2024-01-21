@@ -3,9 +3,9 @@ using Reloaded.Memory.SigScan.ReloadedII.Interfaces;
 
 namespace Project.Utils;
 
-internal static class IStartupScannerExtensions
+public static class IStartupScannerExtensions
 {
-    internal static void Scan<T>(
+    public static void Scan<T>(
         this IStartupScanner scanner,
         IReloadedHooks hooks,
         string name,
@@ -28,7 +28,7 @@ internal static class IStartupScannerExtensions
         function = innerFunction;
     }
 
-    internal static void Scan(
+    public static void Scan(
         this IStartupScanner scanner,
         string name,
         string pattern,
@@ -45,6 +45,29 @@ internal static class IStartupScannerExtensions
             var address = Utilities.BaseAddress + result.Offset;
             Log.Information($"{name} found at: {address:X}");
             callback(address);
+        });
+    }
+
+    public static void FunctionScan<T>(
+        this IStartupScanner scanner,
+        IReloadedHooks hooks,
+        string name,
+        string pattern,
+        Action<IFunction<T>> callback)
+    {
+        scanner.AddMainModuleScan(pattern, result =>
+        {
+            if (!result.Found)
+            {
+                Log.Error($"Failed to find pattern for {name}. Pattern: {pattern}");
+                return;
+            }
+
+            var address = Utilities.BaseAddress + result.Offset;
+            var function = hooks.CreateFunction<T>(address);
+
+            Log.Information($"{name} found at: {address:X}");
+            callback(function);
         });
     }
 }
