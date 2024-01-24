@@ -7,12 +7,14 @@ public static class Log
 {
     private static string name = "Mod";
     private static ILogger? log;
+    private static Color color = Color.White;
     private static bool alwaysAsync;
 
-    public static void Initialize(string name, ILogger log, bool alwaysAsync = false)
+    public static void Initialize(string name, ILogger log, Color color, bool alwaysAsync = false)
     {
         Log.name = name;
         Log.log = log;
+        Log.color = color;
         Log.alwaysAsync = alwaysAsync;
     }
 
@@ -63,7 +65,7 @@ public static class Log
     {
         var color =
             level == LogLevel.Debug ? Color.LightGreen :
-            level == LogLevel.Information ? Color.LightPink :
+            level == LogLevel.Information ? Log.color :
             level == LogLevel.Error ? Color.Red :
             level == LogLevel.Warning ? Color.LightGoldenrodYellow :
             Color.White;
