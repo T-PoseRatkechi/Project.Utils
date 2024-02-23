@@ -20,7 +20,6 @@ public static class Utilities
         return bigEndianValue;
     }
 
-
     public static short ToBigEndian(this short value)
     {
         var bigEndianValue = BitConverter.ToInt16(BitConverter.GetBytes(value).Reverse().ToArray());
